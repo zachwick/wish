@@ -34,6 +34,10 @@
 int wish_cd(char **args);
 int wish_help(char **args);
 int wish_exit(char **args);
+int wish_launch(char **args);
+int wish_execute(char **args);
+char **wish_splitline(char *line);
+void wish_loop(void);
 
 // List of built-in commands
 char *builtin_str[] = {
@@ -93,28 +97,6 @@ wish_exit(char **args)
 }
 
 int
-wish_execute(char **args)
-{
-  int i;
-
-  if (args[0] == NULL)
-    {
-      // An empty command was entered
-      return 1;
-    }
-
-  for (i = 0; i < wish_num_builtins(); i++)
-    {
-      if (strcmp(args[0], builtin_str[i]) == 0)
-	{
-	  return (*builtin_func[i])(args);
-	}
-    }
-
-  return wish_launch(args);
-}
-
-int
 wish_launch(char **args)
 {
   pid_t pid;
@@ -142,10 +124,37 @@ wish_launch(char **args)
       // Parent process
       do {
 	wpid = waitpid(pid, &status, WUNTRACED);
+	if (wpid == -1)
+	  {
+	    fprintf(stderr, "wish: forking error\n");
+	    exit(EXIT_FAILURE);
+	  }
       } while (!WIFEXITED(status) && !WIFSIGNALED(status));
     }
 
   return 1;
+}
+
+int
+wish_execute(char **args)
+{
+  int i;
+
+  if (args[0] == NULL)
+    {
+      // An empty command was entered
+      return 1;
+    }
+
+  for (i = 0; i < wish_num_builtins(); i++)
+    {
+      if (strcmp(args[0], builtin_str[i]) == 0)
+	{
+	  return (*builtin_func[i])(args);
+	}
+    }
+
+  return wish_launch(args);
 }
 
 char
