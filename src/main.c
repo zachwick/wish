@@ -23,6 +23,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 #define WISH_RL_BUFSIZE 1024
 #define WISH_TOK_BUFSIZE 64
@@ -185,15 +187,6 @@ char
   return tokens;
 }
 
-char*
-wish_readline(void)
-{
-  char *line = NULL;
-  ssize_t bufsize = 0;
-  getline(&line, &bufsize, stdin);
-  return line;
-}
-
 void
 wish_loop(void)
 {
@@ -203,10 +196,10 @@ wish_loop(void)
 
   do {
     // Print out a prompt
-    printf("wish> ");
+    line = readline("wish> ");
 
-    // Read a line of text input
-    line = wish_readline();
+    // Add input line to history
+    add_history(line);
 
     // Split the line of text input
     args = wish_splitline(line);
