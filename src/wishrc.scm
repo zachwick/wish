@@ -2,3 +2,4 @@
   (lambda ()
     (display "Loading wish config") (newline)))
 (define wshome '"/home/zwick/")
+(define ls '"ls --color")
