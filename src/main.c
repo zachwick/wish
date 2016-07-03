@@ -39,9 +39,22 @@ int wish_launch(char **args);
 int wish_execute(char **args);
 char **wish_splitline(char *line);
 void wish_loop(void);
+char* wish_prompt();
 
 // Default vars that can be overridden
 char* wshome = "/home/";
+
+// State holding variables
+char *currentdir = "";
+
+char*
+wish_prompt()
+{
+  currentdir = "";
+  char* prompt;
+  prompt = strcat(getcwd(NULL, 0), " > ");
+  return prompt;
+}
 
 // List of built-in commands
 char *builtin_str[] = {
@@ -71,7 +84,6 @@ wish_cd(char **args)
 	{
 	  perror("wish");
 	}
-      //fprintf(stderr, "wish: \"cd\" expects an argument\n");
     }
   else
     {
@@ -213,7 +225,7 @@ wish_loop(void)
 
   do {
     // Print out a prompt
-    line = readline("wish> ");
+    line = readline(wish_prompt());
 
     // Add input line to history
     add_history(line);
@@ -247,9 +259,15 @@ main(int argc, char **argv)
   wshome_scm = scm_variable_ref(scm_c_lookup("wshome"));
   wshome =  scm_to_locale_string (wshome_scm);
 
+  // Set currentdir
+  currentdir = getcwd(NULL, 0);
+
   // Run the wish command loop
   wish_loop();
   // Run any shutdown/cleanup scripts
+
+  // Free anything that need freed
+  free(wshome);
 
   return EXIT_SUCCESS;
 }
