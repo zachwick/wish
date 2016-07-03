@@ -64,7 +64,11 @@ wish_cd(char **args)
 {
   if (args[1] == NULL)
     {
-      fprintf(stderr, "wish: \"cd\" expects an argument\n");
+      if (chdir("/home/zwick") != 0)
+	{
+	  perror("wish");
+	}
+      //fprintf(stderr, "wish: \"cd\" expects an argument\n");
     }
   else
     {
