@@ -41,7 +41,7 @@ char **wish_splitline(char *line);
 void wish_loop(void);
 
 // Default vars that can be overridden
-char* wshome = "/home/zwick";
+char* wshome = "/home/";
 
 // List of built-in commands
 char *builtin_str[] = {
@@ -236,13 +236,17 @@ main(int argc, char **argv)
   scm_init_guile();
   // Load configuration script files
   SCM init_func;
+  SCM wshome_scm;
 
   scm_c_primitive_load("wishrc.scm");
 
   init_func = scm_variable_ref(scm_c_lookup("wish_config"));
 
   scm_call_0(init_func);
-  
+
+  wshome_scm = scm_variable_ref(scm_c_lookup("wshome"));
+  wshome =  scm_to_locale_string (wshome_scm);
+
   // Run the wish command loop
   wish_loop();
   // Run any shutdown/cleanup scripts
