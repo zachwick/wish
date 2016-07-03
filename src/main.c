@@ -40,6 +40,9 @@ int wish_execute(char **args);
 char **wish_splitline(char *line);
 void wish_loop(void);
 
+// Default vars that can be overridden
+char* wshome = "/home/zwick";
+
 // List of built-in commands
 char *builtin_str[] = {
   "cd",
@@ -64,7 +67,7 @@ wish_cd(char **args)
 {
   if (args[1] == NULL)
     {
-      if (chdir("/home/zwick") != 0)
+      if (chdir(wshome) != 0)
 	{
 	  perror("wish");
 	}
@@ -229,8 +232,17 @@ wish_loop(void)
 int
 main(int argc, char **argv)
 {
+  // Initialize Guile
+  scm_init_guile();
   // Load configuration script files
+  SCM init_func;
 
+  scm_c_primitive_load("wishrc.scm");
+
+  init_func = scm_variable_ref(scm_c_lookup("wish_config"));
+
+  scm_call_0(init_func);
+  
   // Run the wish command loop
   wish_loop();
   // Run any shutdown/cleanup scripts
