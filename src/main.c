@@ -25,6 +25,7 @@
 #include <string.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <libguile.h>
 
 #define WISH_RL_BUFSIZE 1024
 #define WISH_TOK_BUFSIZE 64
