@@ -1,5 +1,5 @@
 /**
- * (W)ick (I)nteractive (Sh)ell
+ * (W)ick (I)nteractive (Sh)el
  *
  * Copyright 2016 zach wick <zach@zachwick.com>
  *
