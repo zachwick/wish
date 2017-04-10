@@ -14,7 +14,7 @@ However, wish is a simple C core which can be extended via GNU Guile scripts.
 
 # License
 
-Copyright 2016 zach wick <zach@zachwick.com>
+Copyright 2016, 2017 zach wick <zach@zachwick.com>
 
 wish is free software: you can redistribute it and/or modify it under the terms
 of the GNU General Public License as published by the Free Software Foundation,
