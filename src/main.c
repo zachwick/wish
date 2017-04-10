@@ -223,14 +223,22 @@ wish_loop(void)
     // Add input line to history
     add_history(line);
 
-    // Split the line of text input
-    args = wish_splitline(line);
+		// Determine if the line is some Guile
+		char fc = *line;
+		if(strncmp(&fc, "(", strlen("(")) == 0)
+			{
+				scm_c_eval_string(line);
+				status = 1;
+			}
+		else {
+			// Split the line of text input
+			args = wish_splitline(line);
 
-    // Execute the split line of text input
-    status = wish_execute(args);
-
-    free(line);
-    free(args);
+			// Execute the split line of text input
+			status = wish_execute(args);
+			free(args);
+		}
+		free(line);
   } while (status);
 }
 
