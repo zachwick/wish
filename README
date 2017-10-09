@@ -1,0 +1,36 @@
+# Introduction
+
+(W)ick (I)nteractive (Sh)ell || (W)ish (I)nteractive (Sh)ell
+
+wish is an interactive shell program similar to `bash`, `zsh`, and `fish`.
+However, wish is a simple C core which can be extended via GNU Guile scripts.
+
+# Usage
+
+1. Create a `~/wishrc.scm` file in your home directory
+   1. You can see a simple example `wishrc.scm` in the `src` directory of the
+	 wish code repository.
+2. Invoke `wish` as you would any other shell
+
+# License
+
+Copyright 2016 zach wick <zach@zachwick.com>
+
+wish is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation,
+either version 3 of the License, or (at your option) any later version.
+
+wish is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with wish.  If not, see <http://www.gnu.org/licenses/>.
+
+# TODO
+
+1. add a way to accept and execute arbitary Guile scheme from the `wish` prompt
+2. add a way to accept and defer evaluation of arbitrary functions defined in
+`wishrc.scm`
+3. add support for piping program output to another program
+4. add support for output redirection (the general case of #3)

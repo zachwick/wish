@@ -1,5 +1,5 @@
 /**
- * (W)ick (I)nteractive (Sh)ell
+ * (W)ick (I)nteractive (Sh)el
  *
  * Copyright 2016 zach wick <zach@zachwick.com>
  *
@@ -41,7 +41,6 @@
 
 // Forward definitions
 int wish_cd(char **args);
-int wish_help(char **args);
 int wish_exit(char **args);
 int wish_launch(char **args);
 int wish_execute(char **args);
@@ -51,10 +50,12 @@ char* wish_prompt();
 
 // Default vars that can be overridden
 char* wshome = "/home/";
+SCM help_func;
 
 // State holding variables
 char *currentdir = "";
 
+// Show a shell prompt of the current directory's path followed by '>'
 char*
 wish_prompt()
 {
@@ -67,13 +68,11 @@ wish_prompt()
 // List of built-in commands
 char *builtin_str[] = {
   "cd",
-  "help",
   "exit"
 };
 
 int (*builtin_func[]) (char **) = {
   &wish_cd,
-  &wish_help,
   &wish_exit
 };
 
@@ -83,11 +82,15 @@ wish_num_builtins()
   return sizeof(builtin_str) / sizeof(char *);
 }
 
+// An implementation of 'cd', which changes the user's currently active
+// directory to the given path
 int
 wish_cd(char **args)
 {
   if (args[1] == NULL)
     {
+      // if no path is given, ie. just 'cd' is entered, then change to the
+      // path given as the 'wshome' variable in the loaded 'wishrc.scm' file
       if (chdir(wshome) != 0)
 	{
 	  perror("wish");
@@ -99,21 +102,6 @@ wish_cd(char **args)
 	{
 	  perror("wish");
 	}
-    }
-  return 1;
-}
-
-int
-wish_help(char **args)
-{
-  int i;
-  printf("(w)ick's (i)nteractive (sh)ell\n");
-  printf("A minimalist shell for launching programs\n");
-  printf("The following are built into wish:\n");
-
-  for (i = 0; i < wish_num_builtins(); i++)
-    {
-      printf("  %s\n", builtin_str[i]);
     }
   return 1;
 }
@@ -174,12 +162,17 @@ wish_execute(char **args)
       return 1;
     }
 
+	if (strcmp(args[0],"help") == 0)
+		{
+			scm_call_0(help_func);
+			return 1;
+		}
   for (i = 0; i < wish_num_builtins(); i++)
     {
       if (strcmp(args[0], builtin_str[i]) == 0)
-	{
-	  return (*builtin_func[i])(args);
-	}
+				{
+					return (*builtin_func[i])(args);
+				}
     }
 
   return wish_launch(args);
@@ -263,6 +256,8 @@ main(int argc, char **argv)
   init_func = scm_variable_ref(scm_c_lookup("wish_config"));
 
   scm_call_0(init_func);
+
+	help_func = scm_variable_ref(scm_c_lookup("wish_help"));
 
   wshome_scm = scm_variable_ref(scm_c_lookup("wshome"));
   wshome =  scm_to_locale_string (wshome_scm);
