@@ -259,7 +259,7 @@ main(int argc, char **argv)
   SCM init_func;
   SCM wshome_scm;
 
-  scm_c_primitive_load("wishrc.scm");
+  scm_c_primitive_load("/Users/zwick/wishrc.scm");
 
   init_func = scm_variable_ref(scm_c_lookup("wish_config"));
 

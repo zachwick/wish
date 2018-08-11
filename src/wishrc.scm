@@ -20,7 +20,7 @@
 	(display "The following are built into wish:") (newline)
 	(display "cd") (newline)
 	(display "exit") (newline) (newline)
-	(display "The following are defined in `wishrc.scm':") (newline)
+	(display "The following are defined in `/Users/zwick/wishrc.scm':") (newline)
 	(display "help") (newline)))
 
 (define* (ls #:optional n)
